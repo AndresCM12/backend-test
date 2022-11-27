@@ -1,3 +1,271 @@
-<h1>The api is running on the background</h1>
-<br>
-<h2>Here are the available endpoints</h2>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#6770ec" />
+    <link
+      rel="shortcut icon"
+      href="https://andrescm12-mx.web.app/imgs/icon.png"
+      type="image/x-icon"
+    />
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- fonts -->
+    <title>Tasks | AndresCM12</title>
+  </head>
+  <body>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      html {
+        height: 100vh;
+      }
+      body {
+        height: 100%;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-inline: 16px;
+        height: 50px;
+        background-color: #191c1a;
+        color: whitesmoke;
+      }
+      header h1 {
+        font-size: 16px;
+      }
+      main {
+        padding: 16px;
+        max-width: 1000px;
+        margin-inline: auto;
+      }
+      footer {
+        display: flex;
+        width: 100%;
+        justify-content: flex-start;
+        align-items: flex-end;
+        padding-inline: 16px;
+        background-color: #191c1a;
+        height: 200px;
+        color: whitesmoke;
+        font-size: 30px;
+        font-weight: 700;
+      }
+      ul {
+        list-style: none;
+      }
+      .task--card--wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        width: 90%;
+        max-width: 750px;
+        min-width: 250px;
+        height: fit-content;
+        padding: 16px;
+        background-color: #6770ec;
+        border-radius: 20px;
+      }
+      h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #191c1a;
+      }
+      div.main--forms--wrapper {
+        display: flex;
+      }
+      form.full--form--wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        height: fit-content;
+        padding-inline: 16px;
+        border: solid 1px #191c1a;
+        background-color: white;
+        border-radius: 10px;
+        padding-top: 30px;
+      }
+      form.full--form--wrapper label {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #191c1a;
+        width: 90%;
+        margin-inline: auto;
+      }
+
+      form.full--form--wrapper input {
+        width: 90%;
+        margin-inline: auto;
+        height: 50px;
+        padding-inline: 16px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+        background-color: white;
+        border: 1px solid #191c1a;
+        color: #191c1a;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      div.button--wrapper {
+        display: flex;
+        column-gap: 16px;
+        max-width: 400px;
+        align-self: center;
+      }
+      form.full--form--wrapper input.button {
+        height: 40px;
+        max-width: 200px;
+        padding-inline: 16px;
+        border-radius: 20px;
+        border: none;
+        margin-bottom: 16px;
+        background-color: #6770ec;
+        color: whitesmoke;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      form.full--form--wrapper input.button.secondary {
+        border: 1px solid #6770ec;
+        background-color: white;
+        color: #6770ec;
+      }
+      div.tittle--wrapper {
+        padding: 24px 16px;
+        width: 100%;
+        height: fit-content;
+        border-radius: 10px;
+        background-color: #191c1a;
+      }
+      div.tittle--wrapper h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: whitesmoke;
+        margin-bottom: 4px;
+      }
+      div.tittle--wrapper h2 {
+        font-size: 16px;
+        font-weight: 500;
+        color: whitesmoke;
+      }
+    </style>
+    <header>
+      <h1>Tasks</h1>
+    </header>
+    <main>
+      <div class="tittle--wrapper">
+        <h1>Welcome to my task page</h1>
+        <h2>Here you can create, delete or update tasks!</h2>
+      </div>
+      <br />
+
+      <div class="form--wrapper">
+        <h3>Create or update a task</h3>
+        <form class="full--form--wrapper" id="createTask">
+          <label for="id">Id:</label>
+          <input type="text" id="id" name="id" placeholder="(Only on update)" />
+          <label for="name">Name:</label>
+          <input type="text" id="name" placeholder="name" />
+          <label for="elapsed_time">Elapsed time:</label>
+          <input type="number" id="elapsed_time" placeholder="elapsed_time" />
+          <label for="start_time">Start time:</label>
+          <input type="text" id="start_time" placeholder="start_time" />
+          <label for="deleted">Deleted:</label>
+          <input type="text" id="deleted" placeholder="deleted" />
+          <label for="project_id">Project id:</label>
+          <input type="number" id="project_id" placeholder="project_id" />
+          <div class="button--wrapper">
+            <input class="button secondary" type="button" value="Update" />
+            <input class="button" type="button" value="Create" />
+          </div>
+        </form>
+      </div>
+      <br />
+
+      <div class="form--wrapper">
+        <h3>Delete a task</h3>
+        <form id="deleteTask" class="full--form--wrapper">
+          <label for="id">Id:</label>
+          <input type="text" name="id" placeholder="ID" />
+          <input class="button" type="button" value="Delete" />
+        </form>
+      </div>
+
+      <br />
+      <h3>Tasks</h3>
+      <ul>
+        <li>
+          <div class="task--card--wrapper">
+            <h3>Task: Comer tacos</h3>
+            <p>Id: 3</p>
+            <p>Time: 4500s</p>
+            <p>Start time: 13:30</p>
+            <p>Project id: 1</p>
+          </div>
+        </li>
+      </ul>
+    </main>
+    <footer>
+      <p>AndresCM12</p>
+    </footer>
+    <script>
+      let tasks = getAllTasks();
+      const $formCreateTaskButton = document.querySelector(
+        "#createTask input[type='button']"
+      );
+      const $formCreateTask = document.forms.createTask;
+
+      const $formUpdateTaskButton = document.querySelector(
+        "#updateTask input[type='button']"
+      );
+      const $formUpdateTask = document.querySelector("#updateTask");
+      const $formDeleteTaskButton = document.querySelector(
+        "#deleteTask input[type='button']"
+      );
+      const $formDeleteTask = document.querySelector("#deleteTask");
+
+      $formCreateTaskButton.addEventListener("click", () => {
+        const name = $formCreateTask.name.value;
+        const elapsed_time = $formCreateTask.elapsed_time.value;
+        const start_time = $formCreateTask.start_time.value;
+        const deleted = $formCreateTask.deleted.value;
+        const project_id = $formCreateTask.project_id.value;
+      });
+      $formUpdateTaskButton.addEventListener("click", () => {
+        console.log("Click, update task");
+      });
+      $formDeleteTaskButton.addEventListener("click", () => {
+        console.log("Click, delete task");
+      });
+
+      const $tasksList = document.querySelector("ul");
+
+      async function getAllTasks() {
+        const response = await fetch("http://localhost:3000/task", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        tasks = data.items;
+        console.log(tasks);
+      }
+    </script>
+  </body>
+</html>
