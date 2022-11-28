@@ -1,4 +1,4 @@
-# Backend-test
+# Backend-test // version 1.0
 
 This is a small test for my backend skills, using:
 - NodeJS
