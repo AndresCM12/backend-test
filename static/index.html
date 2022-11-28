@@ -65,20 +65,32 @@
       }
       ul {
         list-style: none;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr 1fr;
+      }
+      ul li {
+        width: 100%;
       }
       .task--card--wrapper {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-        width: 90%;
-        max-width: 750px;
-        min-width: 250px;
+        width: 100%;
         height: fit-content;
         padding: 16px;
         background-color: #6770ec;
         border-radius: 20px;
+        color: white;
       }
+      .task--card--wrapper h3 {
+        color: white;
+      }
+      .task--card--wrpapper p {
+        color: white;
+      }
+
       h3 {
         font-size: 20px;
         font-weight: 700;
@@ -173,7 +185,19 @@
         <h2>Here you can create, delete or update tasks!</h2>
       </div>
       <br />
-
+      <h3>Tasks</h3>
+      <ul id="taskWrapper">
+        <li>
+          <div class="task--card--wrapper">
+            <h3>Name: Comer tacos</h3>
+            <p>Id: 3</p>
+            <p>Time: 4500s</p>
+            <p>Start time: 13:30</p>
+            <p>Project id: 1</p>
+          </div>
+        </li>
+      </ul>
+      <br />
       <div class="form--wrapper">
         <h3>Create or update a task</h3>
         <form class="full--form--wrapper" id="createTask">
@@ -190,8 +214,13 @@
           <label for="project_id">Project id:</label>
           <input type="number" id="project_id" placeholder="project_id" />
           <div class="button--wrapper">
-            <input class="button secondary" type="button" value="Update" />
-            <input class="button" type="button" value="Create" />
+            <input
+              class="button secondary"
+              type="button"
+              value="Update"
+              id="update"
+            />
+            <input class="button" type="button" value="Create" id="create" />
           </div>
         </form>
       </div>
@@ -207,64 +236,174 @@
       </div>
 
       <br />
-      <h3>Tasks</h3>
-      <ul>
-        <li>
-          <div class="task--card--wrapper">
-            <h3>Task: Comer tacos</h3>
-            <p>Id: 3</p>
-            <p>Time: 4500s</p>
-            <p>Start time: 13:30</p>
-            <p>Project id: 1</p>
-          </div>
-        </li>
-      </ul>
     </main>
     <footer>
       <p>AndresCM12</p>
     </footer>
     <script>
-      let tasks = getAllTasks();
-      const $formCreateTaskButton = document.querySelector(
-        "#createTask input[type='button']"
-      );
+      //Get all requiered nodes
+      const $formCreateTaskButton = document.querySelector("input#create");
       const $formCreateTask = document.forms.createTask;
-
-      const $formUpdateTaskButton = document.querySelector(
-        "#updateTask input[type='button']"
-      );
-      const $formUpdateTask = document.querySelector("#updateTask");
+      const $formUpdateTaskButton = document.querySelector("input#update");
+      const $formDeleteTask = document.querySelector("#deleteTask");
       const $formDeleteTaskButton = document.querySelector(
         "#deleteTask input[type='button']"
       );
-      const $formDeleteTask = document.querySelector("#deleteTask");
+      const $tasksList = document.querySelector("ul#taskWrapper");
 
-      $formCreateTaskButton.addEventListener("click", () => {
-        const name = $formCreateTask.name.value;
-        const elapsed_time = $formCreateTask.elapsed_time.value;
-        const start_time = $formCreateTask.start_time.value;
-        const deleted = $formCreateTask.deleted.value;
-        const project_id = $formCreateTask.project_id.value;
-      });
-      $formUpdateTaskButton.addEventListener("click", () => {
-        console.log("Click, update task");
-      });
-      $formDeleteTaskButton.addEventListener("click", () => {
-        console.log("Click, delete task");
-      });
+      //First page load
+      getAllTasks();
 
-      const $tasksList = document.querySelector("ul");
+      addListenersToButtons();
 
       async function getAllTasks() {
-        const response = await fetch("http://localhost:3000/task", {
-          method: "GET",
+        const tasks = await queryToUrl("http://localhost:3000/task", "GET");
+        console.log(tasks.items);
+        renderTasks(tasks.items);
+      }
+
+      async function createTask() {
+        const task = {
+          name: $formCreateTask.name.value,
+          elapsed_time: $formCreateTask.elapsed_time.value,
+          start_time: $formCreateTask.start_time.value,
+          deleted: $formCreateTask.deleted.value,
+          project_id: $formCreateTask.project_id.value,
+        };
+        if (
+          task.name === "" ||
+          task.elapsed_time === "" ||
+          task.start_time === "" ||
+          task.deleted === "" ||
+          task.project_id === ""
+        ) {
+          alert("Please fill all the fields");
+          return;
+        }
+        const response = await queryToUrl(
+          "http://localhost:3000/task/create",
+          "POST",
+          task
+        );
+        console.log(response);
+
+        if (response.items) {
+          let data = response.items;
+          renderTasks(data);
+        } else {
+          console.log(response);
+          console.log("Error creating task");
+        }
+      }
+
+      async function updateTask() {
+        const task = {
+          id: $formCreateTask.id.value,
+          name: $formCreateTask.name.value,
+          elapsed_time: $formCreateTask.elapsed_time.value,
+          start_time: $formCreateTask.start_time.value,
+          deleted: $formCreateTask.deleted.value,
+          project_id: $formCreateTask.project_id.value,
+        };
+        if (
+          task.id === "" ||
+          task.name === "" ||
+          task.elapsed_time === "" ||
+          task.start_time === "" ||
+          task.deleted === "" ||
+          task.project_id === ""
+        ) {
+          alert("Please fill all the fields");
+          return;
+        }
+        const response = await queryToUrl(
+          "http://localhost:3000/task/update/" + task.id,
+          "PUT",
+          task
+        );
+        console.log(response);
+
+        if (response.items) {
+          let data = response.items;
+          renderTasks(data);
+        } else {
+          console.log(response);
+          console.log("Error updating task");
+        }
+      }
+
+      async function deleteTask() {
+        const id = $formDeleteTask.id.value;
+        if (id === "") {
+          alert("Please fill the id field");
+          return;
+        }
+        const response = await queryToUrl(
+          "http://localhost:3000/task/delete/" + id,
+          "DELETE"
+        );
+
+        if (response.items) {
+          let data = response.items;
+          renderTasks(data);
+        } else {
+          console.log("Error deleting task");
+        }
+      }
+
+      function addListenersToButtons() {
+        $formCreateTaskButton.addEventListener("click", async () => {
+          await createTask();
+        });
+        $formUpdateTaskButton.addEventListener("click", async () => {
+          await updateTask();
+        });
+        $formDeleteTaskButton.addEventListener("click", async () => {
+          await deleteTask();
+        });
+      }
+
+      async function queryToUrl(url, method, body) {
+        if (!body) {
+          const response = await fetch(url, {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+          return data;
+        }
+
+        const response = await fetch(url, {
+          method: method,
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(body),
         });
+
         const data = await response.json();
-        tasks = data.items;
-        console.log(tasks);
+        return data;
+      }
+
+      function renderTasks(tasks) {
+        let $liItem = "";
+
+        tasks.forEach((task) => {
+          console.log(task.name);
+          $liItem =
+            $liItem +
+            `<div class="task--card--wrapper">
+            <h3>Task: ${task.name}</h3>
+            <p>Id: ${task.id}</p>
+            <p>Time: ${task.elapsed_time}</p>
+            <p>Start time: ${task.start_time}</p>
+            <p>Project id: ${task.project_id}</p>
+          </div>`;
+        });
+        $tasksList.innerHTML = $liItem;
       }
     </script>
   </body>
